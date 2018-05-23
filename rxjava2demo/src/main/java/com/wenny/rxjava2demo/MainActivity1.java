@@ -27,6 +27,10 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by Administrator on 2018/5/11.
@@ -363,7 +367,7 @@ public class MainActivity1 extends AppCompatActivity {
     }
 
     private void rxjava12() {
-        Observable.merge(Observable.just(1, 2,3,4,5,6), Observable.just(7, 8, 9)).subscribe(new Consumer<Integer>() {
+        Observable.merge(Observable.just(1, 2, 3, 4, 5, 6), Observable.just(7, 8, 9)).subscribe(new Consumer<Integer>() {
             @Override
             public void accept(@NonNull Integer integer) throws Exception {
                 mRxOperatorsText.append("merge :" + integer + "\n");
@@ -373,7 +377,7 @@ public class MainActivity1 extends AppCompatActivity {
 
     }
 
-    private void okhttpRxjava(){
+    private void okhttpRxjava() {
         Observable.create(new ObservableOnSubscribe<Response>() {
             @Override
             public void subscribe(ObservableEmitter<Response> e) throws Exception {
@@ -403,6 +407,29 @@ public class MainActivity1 extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void retrofit1() {
+        //创建一个retrofit
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://news-at.zhihu.com/")
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);//代理对象
+        Call<ResponseBody> getdata = apiService.getdata();
+        getdata.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+    }
+    private void retrofitRxjava(){
+
     }
 
     @Override
