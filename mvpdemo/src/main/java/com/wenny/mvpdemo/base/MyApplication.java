@@ -1,4 +1,4 @@
-package com.wenny.mvpdemo;
+package com.wenny.mvpdemo.base;
 
 import android.app.Application;
 

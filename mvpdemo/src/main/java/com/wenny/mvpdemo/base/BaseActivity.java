@@ -1,4 +1,4 @@
-package com.wenny.mvpdemo.ui.base;
+package com.wenny.mvpdemo.base;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Created by ${wenny} on 2017/6/21.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public  abstract class BaseActivity extends AppCompatActivity implements BaseView{
     // 管理运行的所有的activity
 //    public final static List<AppCompatActivity> mActivities = new LinkedList<AppCompatActivity>();
 //    public static BaseActivity activity;
@@ -185,8 +185,30 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         //注销EventBus
         EventBus.getDefault().unregister(this);
-//        synchronized (mActivities) {
-//            mActivities.remove(this);
-//        }
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showErr() {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return BaseActivity.this;
     }
 }

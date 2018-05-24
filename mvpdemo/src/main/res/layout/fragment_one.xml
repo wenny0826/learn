@@ -19,15 +19,16 @@
                 android:id="@+id/viewpager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,5:2"
+                app:layout_constraintDimensionRatio="H,5:3"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
             <me.relex.circleindicator.CircleIndicator
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:id="@+id/circleIndicator"
+                app:ci_drawable_unselected="@drawable/radius_banner_unselected"
+                app:ci_drawable="@drawable/radius_banner"
                 app:layout_constraintBottom_toBottomOf="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:background="@color/appColor"
                 android:layout_height="wrap_content">
 
             </me.relex.circleindicator.CircleIndicator>

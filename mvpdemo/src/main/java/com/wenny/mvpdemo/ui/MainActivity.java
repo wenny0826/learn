@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.ui.base.BaseActivity;
+import com.wenny.mvpdemo.base.BaseActivity;
 
 /**
  * Created by Administrator on 2018/5/15.

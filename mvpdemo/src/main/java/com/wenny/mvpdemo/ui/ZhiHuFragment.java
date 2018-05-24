@@ -7,12 +7,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.data.DataRepository;
-import com.wenny.mvpdemo.model.ZhihuBanberBean;
-import com.wenny.mvpdemo.model.ZhihuListBean;
-import com.wenny.mvpdemo.presenter.ZhihuContract;
+import com.wenny.mvpdemo.entity.ZhihuBanberBean;
+import com.wenny.mvpdemo.entity.ZhihuListBean;
+import com.wenny.mvpdemo.presenter.ZhihuContact;
 import com.wenny.mvpdemo.presenter.ZhihuPresenter;
-import com.wenny.mvpdemo.ui.base.BaseFragment;
+import com.wenny.mvpdemo.ui.adapter.ZhihuBannerAdapter;
+import com.wenny.mvpdemo.base.BaseFragment;
 import com.wenny.mvpdemo.weigth.AutoScrollViewPager.AutoScrollViewPager;
 
 import java.util.List;
@@ -23,18 +23,18 @@ import me.relex.circleindicator.CircleIndicator;
  * Created by Administrator on 2018/5/21.
  */
 
-public class ZhiHuFragment extends BaseFragment implements ZhihuContract.View{
-    
+public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
+
     private String TAG = "ZhiHuFragment";
-    
+
     private SwipeRefreshLayout swipeRefresh;
     private NestedScrollView nestedScrollview;
     private AutoScrollViewPager viewpager;
     private CircleIndicator circleIndicator;
     private RecyclerView recyclerview;
+    private ZhihuBannerAdapter zhihuBannerAdapter;
 
-    private ZhihuContract.Presenter presenter;
-    private DataRepository dataRepository;
+    private ZhihuPresenter presenter;
 
     @Override
     protected int getContentId() {
@@ -50,19 +50,26 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContract.View{
         circleIndicator = view.findViewById(R.id.circleIndicator);
         recyclerview = view.findViewById(R.id.recyclerview);
 
-        dataRepository = new DataRepository();
-        presenter = new ZhihuPresenter(dataRepository,this);
+        zhihuBannerAdapter = new ZhihuBannerAdapter(getContext());
+        viewpager.setAdapter(zhihuBannerAdapter);
+
+        presenter = new ZhihuPresenter();
+        presenter.attachView(this);
+        presenter.getData();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        presenter.start();
     }
 
+
     @Override
-    public void showBanber(List<ZhihuBanberBean> banberBeans) {
+    public void showBanner(List<ZhihuBanberBean> zhihuBanberBeans) {
         Log.d(TAG, "showBanber: ");
+        zhihuBannerAdapter.setZhihuBanberBeans(zhihuBanberBeans);
+        circleIndicator.setViewPager(viewpager);
+        viewpager.startAutoScroll();
     }
 
     @Override
@@ -71,7 +78,8 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContract.View{
     }
 
     @Override
-    public void setPresenter(ZhihuContract.Presenter presenter) {
-        this.presenter = presenter;
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
     }
 }

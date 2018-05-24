@@ -1,4 +1,4 @@
-package com.wenny.mvpdemo.ui.base;
+package com.wenny.mvpdemo.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Created by ${wenny} on 2017/6/21.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements BaseView{
     private FragmentManager fragmentManager;
     //当前正在展示的Fragment
     private BaseFragment showFragment;
@@ -113,5 +113,39 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroy();
         //注销EventBus
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void showToast(String msg) {
+
+    }
+
+    @Override
+    public void showErr() {
+
+    }
+
+    /**
+     * 检查activity连接情况
+     */
+    public void checkActivityAttached() {
+        if (getActivity() == null) {
+            throw new ActivityNotAttachedException();
+        }
+    }
+    public static class ActivityNotAttachedException extends RuntimeException {
+        public ActivityNotAttachedException() {
+            super("Fragment has disconnected from Activity ! - -.");
+        }
     }
 }

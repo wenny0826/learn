@@ -1,4 +1,4 @@
-package com.wenny.mvpdemo.model;
+package com.wenny.mvpdemo.entity;
 
 import java.util.List;
 

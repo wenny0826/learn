@@ -1,25 +1,32 @@
-package com.wenny.mvpdemo.model;
-
-import java.util.List;
+package com.wenny.mvpdemo.entity;
 
 /**
  * Created by Administrator on 2018/5/23.
  */
-public class ZhihuListBean {
+
+public class ZhihuBanberBean {
 
     /**
-     * images : ["https://pic2.zhimg.com/v2-e9c9c297487ebe19301b1ff0bef8a041.jpg"]
+     * image : https://pic2.zhimg.com/v2-d1c570786cbb2969865b9081c1209e81.jpg
      * type : 0
-     * id : 9683739
-     * ga_prefix : 052306
-     * title : 瞎扯 · 如何正确地吐槽
+     * id : 9683775
+     * ga_prefix : 052313
+     * title : 10 万美元一稿不改，乔布斯凭什么还选择他设计的 Logo？
      */
 
+    private String image;
     private int type;
     private String id;
     private String ga_prefix;
     private String title;
-    private List<String> images;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public int getType() {
         return type;
@@ -51,13 +58,5 @@ public class ZhihuListBean {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
     }
 }
