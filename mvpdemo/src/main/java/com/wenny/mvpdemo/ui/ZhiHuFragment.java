@@ -1,21 +1,27 @@
 package com.wenny.mvpdemo.ui;
 
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.entity.ZhihuBanberBean;
-import com.wenny.mvpdemo.entity.ZhihuListBean;
+import com.wenny.mvpdemo.base.BaseFragment;
+import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.entity.ZhiHuListBean;
+import com.wenny.mvpdemo.evenbus.ChangeTitleEven;
 import com.wenny.mvpdemo.presenter.ZhihuContact;
 import com.wenny.mvpdemo.presenter.ZhihuPresenter;
 import com.wenny.mvpdemo.ui.adapter.ZhihuBannerAdapter;
-import com.wenny.mvpdemo.base.BaseFragment;
-import com.wenny.mvpdemo.weigth.AutoScrollViewPager.AutoScrollViewPager;
+import com.wenny.mvpdemo.ui.adapter.ZhihuListAdapter;
 
-import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -29,12 +35,13 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
 
     private SwipeRefreshLayout swipeRefresh;
     private NestedScrollView nestedScrollview;
-    private AutoScrollViewPager viewpager;
+    private ViewPager viewpager;
     private CircleIndicator circleIndicator;
     private RecyclerView recyclerview;
     private ZhihuBannerAdapter zhihuBannerAdapter;
-
+    private ZhihuListAdapter zhihuListAdapter;
     private ZhihuPresenter presenter;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected int getContentId() {
@@ -52,10 +59,65 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
 
         zhihuBannerAdapter = new ZhihuBannerAdapter(getContext());
         viewpager.setAdapter(zhihuBannerAdapter);
+        zhihuListAdapter = new ZhihuListAdapter(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
 
+        recyclerview.setLayoutManager(linearLayoutManager);
+        recyclerview.setAdapter(zhihuListAdapter);
+        recyclerview.setNestedScrollingEnabled(false);
         presenter = new ZhihuPresenter();
         presenter.attachView(this);
-        presenter.getData();
+        presenter.getData(false);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.getData(true);
+            }
+        });
+        nestedScrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) {
+//                    Log.i(TAG, "Scroll DOWN");
+                    swipeRefresh.setRefreshing(false);
+                    scrollDown(scrollY);
+                }
+                if (scrollY < oldScrollY) {
+//                    Log.i(TAG, "Scroll UP");
+                    swipeRefresh.setRefreshing(false);
+                    scrollUp(scrollY);
+                }
+
+                if (scrollY == 0) {
+                }
+
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    presenter.loadNext();
+                }
+            }
+        });
+    }
+    int nowPosition = -1;
+    private void scrollUp(int scrollY){
+        if (nowPosition > -1){
+            if ((scrollY - viewpager.getHeight()) < positionHeight.get(nowPosition)){
+                nowPosition --;
+                changeTitie(nowPosition);
+            }
+        }
+    }
+    private void scrollDown(int scrollY){
+        if (positionHeight.size()>(nowPosition+1)&&(scrollY - viewpager.getHeight()) > positionHeight.get(nowPosition+1)){
+            nowPosition++;
+            changeTitie(nowPosition);
+        }
+    }
+    private void changeTitie(int pos){
+        if (pos == -1){
+            EventBus.getDefault().post(new ChangeTitleEven(getResources().getString(R.string.app_zhihu_home)));
+        }else {
+            EventBus.getDefault().post(new ChangeTitleEven(zhihuListAdapter.getTitle(pos)));
+        }
     }
 
     @Override
@@ -65,21 +127,34 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
 
 
     @Override
-    public void showBanner(List<ZhihuBanberBean> zhihuBanberBeans) {
-        Log.d(TAG, "showBanber: ");
-        zhihuBannerAdapter.setZhihuBanberBeans(zhihuBanberBeans);
-        circleIndicator.setViewPager(viewpager);
-        viewpager.startAutoScroll();
-    }
-
-    @Override
-    public void showList(List<ZhihuListBean> zhihuListBeans) {
-        Log.d(TAG, "showList: ");
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.detachView();
+    }
+
+    private Map<Integer, Integer> positionHeight = new HashMap<>();
+
+    @Override
+    public void getData(ZhiHuHomeBean zhiHuHomeBean, boolean isrefresh) {
+        zhihuBannerAdapter.setZhihuBanberBeans(zhiHuHomeBean.getTop_stories());
+        circleIndicator.setViewPager(viewpager);
+//        viewpager.startAutoScroll();
+        ZhiHuListBean zhiHuListBean = new ZhiHuListBean();
+        zhiHuListBean.setDate(getResources().getString(R.string.app_zhihu_today));
+        zhiHuListBean.setStories(zhiHuHomeBean.getStories());
+        zhihuListAdapter.setData(zhiHuListBean);
+        Log.d(TAG, "getData: " + recyclerview.getHeight());
+        positionHeight.clear();
+        positionHeight.put(0, 0);
+        if (isrefresh) {
+            swipeRefresh.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void loadNext(ZhiHuListBean zhiHuListBean) {
+        zhihuListAdapter.addData(zhiHuListBean);
+        Log.d(TAG, "loadNext: " + recyclerview.getHeight());
+        positionHeight.put(zhihuListAdapter.getItemCount() - 1,recyclerview.getHeight());
     }
 }

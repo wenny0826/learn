@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ZhiHuHomeBean {
     private String date;
-    private List<ZhihuListBean> stories;
+    private List<ZhihuNewBean> stories;
     private List<ZhihuBanberBean> top_stories;
 
     public String getDate() {
@@ -19,11 +19,11 @@ public class ZhiHuHomeBean {
         this.date = date;
     }
 
-    public List<ZhihuListBean> getStories() {
+    public List<ZhihuNewBean> getStories() {
         return stories;
     }
 
-    public void setStories(List<ZhihuListBean> stories) {
+    public void setStories(List<ZhihuNewBean> stories) {
         this.stories = stories;
     }
 

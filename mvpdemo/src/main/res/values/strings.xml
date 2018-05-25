@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MVPDemo</string>
+    <string name="app_zhihu_home">知乎日报</string>
+    <string name="app_zhihu_today">今日热点</string>
 </resources>

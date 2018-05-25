@@ -1,63 +1,38 @@
 package com.wenny.mvpdemo.entity;
 
+import com.wenny.mvpdemo.util.TimeUtil;
+
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/5/23.
+ * Created by Administrator on 2018/5/24.
  */
-public class ZhihuListBean {
 
-    /**
-     * images : ["https://pic2.zhimg.com/v2-e9c9c297487ebe19301b1ff0bef8a041.jpg"]
-     * type : 0
-     * id : 9683739
-     * ga_prefix : 052306
-     * title : 瞎扯 · 如何正确地吐槽
-     */
+public class ZhiHuListBean {
+    private String date;
+    private List<ZhihuNewBean> stories;
 
-    private int type;
-    private String id;
-    private String ga_prefix;
-    private String title;
-    private List<String> images;
-
-    public int getType() {
-        return type;
+    public String getDate() {
+        return date;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public String getShowData() {
+        if (date.equals("今日热点")){
+            return date;
+        }
+        long time = TimeUtil.string2Date(date, TimeUtil.DATE_FORMAT_13).getTime();
+        return TimeUtil.date2String(time,TimeUtil.DATE_FORMAT_12)+" " +TimeUtil.getWeekTime(time);
     }
 
-    public String getId() {
-        return id;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public List<ZhihuNewBean> getStories() {
+        return stories;
     }
 
-    public String getGa_prefix() {
-        return ga_prefix;
-    }
-
-    public void setGa_prefix(String ga_prefix) {
-        this.ga_prefix = ga_prefix;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setStories(List<ZhihuNewBean> stories) {
+        this.stories = stories;
     }
 }

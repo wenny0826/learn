@@ -3,6 +3,7 @@ package com.wenny.mvpdemo.data;
 import com.wenny.mvpdemo.data.remote.RetrofitService;
 import com.wenny.mvpdemo.data.remote.UrlConstents;
 import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.entity.ZhiHuListBean;
 
 import io.reactivex.Observable;
 import retrofit2.Retrofit;
@@ -24,5 +25,15 @@ public class DataRepository {
         RetrofitService retrofitService = retrofit.create(RetrofitService.class);
         Observable<ZhiHuHomeBean> zhihuHome = retrofitService.getZhihuHome();
         return zhihuHome;
+    }
+    public static Observable<ZhiHuListBean> loadNewNext(String data) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UrlConstents.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        RetrofitService retrofitService = retrofit.create(RetrofitService.class);
+
+        return retrofitService.loadGhiHuNewNext(data);
     }
 }

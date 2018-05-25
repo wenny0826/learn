@@ -1,5 +1,6 @@
 package com.wenny.mvpdemo.ui;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +11,10 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.wenny.mvpdemo.R;
 import com.wenny.mvpdemo.base.BaseActivity;
+import com.wenny.mvpdemo.evenbus.ChangeTitleEven;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Administrator on 2018/5/15.
@@ -33,6 +38,8 @@ public class MainActivity extends BaseActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         navigation = findViewById(R.id.navigation);
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_zhihu_home));
+        toolbar.setTitleTextColor(Color.WHITE);
         bottom_view.addItem(new BottomNavigationItem(R.drawable.ic_launcher_background, "one"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_launcher_background, "two"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_launcher_background, "three"))
@@ -86,5 +93,11 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+        showFragment(R.id.content, new ZhiHuFragment());
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeTitle(ChangeTitleEven changeTitleEven){
+        toolbar.setTitle(changeTitleEven.getTitle());
+    }
+
 }

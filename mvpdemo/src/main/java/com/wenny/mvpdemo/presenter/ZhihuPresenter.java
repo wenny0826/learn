@@ -5,6 +5,7 @@ import android.util.Log;
 import com.wenny.mvpdemo.base.BasePresenter;
 import com.wenny.mvpdemo.data.DataRepository;
 import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.entity.ZhiHuListBean;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,48 +18,72 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ZhihuPresenter extends BasePresenter<ZhihuContact.View> implements ZhihuContact.Presenter {
 
+    private String pageTime;
+
     @Override
-    public void getData() {
+    public void getData(boolean isRefresh) {
         DataRepository.getZhihuHome()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ZhiHuHomeBean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.d("print", "onSubscribe: ");
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Log.d("print", "onSubscribe: ");
 
-            }
+                    }
 
-            @Override
-            public void onNext(ZhiHuHomeBean zhiHuHomeBean) {
-                Log.d("print", "onNext: ");
-                if (zhiHuHomeBean != null) {
-                    getView().showList(zhiHuHomeBean.getStories());
-                    getView().showBanner(zhiHuHomeBean.getTop_stories());
-                }
-            }
+                    @Override
+                    public void onNext(ZhiHuHomeBean zhiHuHomeBean) {
+                        Log.d("print", "onNext: ");
+                        if (zhiHuHomeBean != null && isViewAttached()) {
+                            getView().getData(zhiHuHomeBean, isRefresh);
+                            pageTime = zhiHuHomeBean.getDate();
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.d("print", "onError: " + e.getMessage());
-                e.printStackTrace();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("print", "onError: " + e.getMessage());
+                        e.printStackTrace();
+                    }
 
-            @Override
-            public void onComplete() {
-                Log.d("print", "onComplete: ");
+                    @Override
+                    public void onComplete() {
+                        Log.d("print", "onComplete: ");
 
-            }
-        });
+                    }
+                });
     }
 
-    @Override
-    public void refresh() {
-
-    }
 
     @Override
     public void loadNext() {
+        DataRepository.loadNewNext(pageTime)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ZhiHuListBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(ZhiHuListBean zhiHuListBean) {
+                        if (zhiHuListBean != null && isViewAttached()) {
+                            getView().loadNext(zhiHuListBean);
+                            pageTime = zhiHuListBean.getDate();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
