@@ -1,7 +1,7 @@
 package com.wenny.mvpdemo.data.remote;
 
-import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
-import com.wenny.mvpdemo.entity.ZhiHuListBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuListBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

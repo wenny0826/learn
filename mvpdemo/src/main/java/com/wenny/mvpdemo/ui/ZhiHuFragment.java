@@ -10,8 +10,9 @@ import android.view.View;
 
 import com.wenny.mvpdemo.R;
 import com.wenny.mvpdemo.base.BaseFragment;
-import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
-import com.wenny.mvpdemo.entity.ZhiHuListBean;
+import com.wenny.mvpdemo.base.MyApplication;
+import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuListBean;
 import com.wenny.mvpdemo.evenbus.ChangeTitleEven;
 import com.wenny.mvpdemo.presenter.ZhihuContact;
 import com.wenny.mvpdemo.presenter.ZhihuPresenter;
@@ -61,11 +62,12 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
         viewpager.setAdapter(zhihuBannerAdapter);
         zhihuListAdapter = new ZhihuListAdapter(getContext());
         linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setRecycleChildrenOnDetach(true);
 
         recyclerview.setLayoutManager(linearLayoutManager);
         recyclerview.setAdapter(zhihuListAdapter);
         recyclerview.setNestedScrollingEnabled(false);
-        presenter = new ZhihuPresenter();
+        presenter = new ZhihuPresenter(MyApplication.dataRepository);
         presenter.attachView(this);
         presenter.getData(false);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,7 +93,7 @@ public class ZhiHuFragment extends BaseFragment implements ZhihuContact.View {
                 if (scrollY == 0) {
                 }
 
-                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                if (scrollY== (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
                     presenter.loadNext();
                 }
             }

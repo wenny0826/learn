@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.entity.ZhihuBanberBean;
+import com.wenny.mvpdemo.data.entity.ZhihuBanberBean;
 
 import java.util.ArrayList;
 import java.util.List;

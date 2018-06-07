@@ -1,6 +1,6 @@
 package com.wenny.mvpdemo.data.remote;
 
-import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
 
 import io.reactivex.Observable;
 

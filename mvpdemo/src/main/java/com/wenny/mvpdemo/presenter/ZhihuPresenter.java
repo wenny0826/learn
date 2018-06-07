@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.wenny.mvpdemo.base.BasePresenter;
 import com.wenny.mvpdemo.data.DataRepository;
-import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
-import com.wenny.mvpdemo.entity.ZhiHuListBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuListBean;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,10 +19,15 @@ import io.reactivex.schedulers.Schedulers;
 public class ZhihuPresenter extends BasePresenter<ZhihuContact.View> implements ZhihuContact.Presenter {
 
     private String pageTime;
+    DataRepository dataRepository;
+
+    public ZhihuPresenter(DataRepository dataRepository) {
+        this.dataRepository = dataRepository;
+    }
 
     @Override
     public void getData(boolean isRefresh) {
-        DataRepository.getZhihuHome()
+        dataRepository.getZhihuHome()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ZhiHuHomeBean>() {
@@ -58,7 +63,7 @@ public class ZhihuPresenter extends BasePresenter<ZhihuContact.View> implements 
 
     @Override
     public void loadNext() {
-        DataRepository.loadNewNext(pageTime)
+        dataRepository.loadNewNext(pageTime)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ZhiHuListBean>() {

@@ -1,4 +1,4 @@
-package com.wenny.mvpdemo.entity;
+package com.wenny.mvpdemo.data.entity;
 
 import com.wenny.mvpdemo.util.TimeUtil;
 

@@ -1,6 +1,6 @@
 package com.wenny.mvpdemo.data;
 
-import com.wenny.mvpdemo.entity.ZhiHuHomeBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
 
 import io.reactivex.Observable;
 
@@ -10,5 +10,5 @@ import io.reactivex.Observable;
  */
 
 public interface DataSource {
-    Observable<ZhiHuHomeBean> getZhihuHome();
+    public Observable<ZhiHuHomeBean> getZhihuHome();
 }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.entity.ZhiHuListBean;
+import com.wenny.mvpdemo.data.entity.ZhiHuListBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.List;
 public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<ZhiHuListBean> zhiHuListBeans;
+    RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
 
     public ZhihuListAdapter(Context context) {
         this.context = context;
@@ -75,6 +76,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             tv_data = itemView.findViewById(R.id.tv_data);
             recyclerview = itemView.findViewById(R.id.recyclerview);
+            recyclerview.setRecycledViewPool(recycledViewPool);
         }
     }
 }

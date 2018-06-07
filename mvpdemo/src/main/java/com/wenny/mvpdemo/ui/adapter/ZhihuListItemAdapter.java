@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wenny.mvpdemo.R;
-import com.wenny.mvpdemo.entity.ZhihuNewBean;
+import com.wenny.mvpdemo.data.entity.ZhihuNewBean;
 
 import java.util.ArrayList;
 import java.util.List;

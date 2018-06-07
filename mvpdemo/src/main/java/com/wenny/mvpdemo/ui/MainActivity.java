@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
             public void onTabSelected(int position) {
                 switch (position) {
                     case 0:
-                        showFragment(R.id.content, new ZhiHuFragment());
+                        showFragment(R.id.content, new ZhiHuFragment1());
                         break;
                     case 1:
                         showFragment(R.id.content, new TwoFragment());
@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
-        showFragment(R.id.content, new ZhiHuFragment());
+        showFragment(R.id.content, new ZhiHuFragment1());
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeTitle(ChangeTitleEven changeTitleEven){
