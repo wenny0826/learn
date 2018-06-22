@@ -1,5 +1,7 @@
 package com.wenny.mvpdemo.data;
 
+import com.wenny.mvpdemo.data.entity.NewInfoExtraBean;
+import com.wenny.mvpdemo.data.entity.NewsInfoBean;
 import com.wenny.mvpdemo.data.remote.RetrofitService;
 import com.wenny.mvpdemo.data.remote.UrlConstents;
 import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
@@ -34,4 +36,12 @@ public class DataRepository{
     public  Observable<ZhiHuListBean> loadNewNext(String data) {
         return retrofitService.loadGhiHuNewNext(data);
     }
+    public  Observable<NewsInfoBean> getNewsInfo(String newsId) {
+        return retrofitService.getNewsInfo(newsId);
+    }
+
+    public  Observable<NewInfoExtraBean> getNewsInfoExtra(String newsId) {
+        return retrofitService.getNewsInfoExtra(newsId);
+    }
+
 }

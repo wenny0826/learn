@@ -32,6 +32,11 @@ public class ZhihuHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<Object> list;
     private Context context;
     private ZhihuBannerAdapter zhihuBannerAdapter;
+    private newsItemClickListener newsItemClickListener;
+
+    public void setNewsItemClickListener(ZhihuHomeAdapter.newsItemClickListener newsItemClickListener) {
+        this.newsItemClickListener = newsItemClickListener;
+    }
 
     public ZhihuHomeAdapter(Context context) {
         this.context = context;
@@ -61,7 +66,7 @@ public class ZhihuHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (viewType == 1) {
             return new DateViewHolder(LayoutInflater.from(context).inflate(R.layout.item_zhihu_home_date, parent, false));
         }
-        return new NewsViewHolder(LayoutInflater.from(context).inflate(R.layout.item_zhihu_list_item, parent, false));
+        return new NewsViewHolder(LayoutInflater.from(context).inflate(R.layout.item_zhihu_list, parent, false));
     }
 
     @Override
@@ -130,6 +135,19 @@ public class ZhihuHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             tv_title = itemView.findViewById(R.id.tv_title);
             cover = itemView.findViewById(R.id.cover);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (newsItemClickListener != null){
+                        ZhihuNewBean zhihuNewBean = (ZhihuNewBean) list.get(getAdapterPosition() - HEAD);
+                        newsItemClickListener.onNewsItemClick(zhihuNewBean.getId());
+                    }
+                }
+            });
         }
+    }
+
+    public interface newsItemClickListener{
+        void onNewsItemClick(String newsid);
     }
 }

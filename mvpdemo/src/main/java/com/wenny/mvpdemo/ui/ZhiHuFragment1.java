@@ -1,5 +1,6 @@
 package com.wenny.mvpdemo.ui;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +19,13 @@ import com.wenny.mvpdemo.ui.adapter.ZhihuHomeAdapter;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2018/6/7.
  */
 
-public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View {
+public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View, ZhihuHomeAdapter.newsItemClickListener {
     private RecyclerView recyclerview;
     private String TAG = "ZhiHuFragment";
     private SwipeRefreshLayout swipeRefresh;
@@ -52,6 +51,7 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View {
         presenter = new ZhihuPresenter(MyApplication.dataRepository);
         presenter.attachView(this);
         presenter.getData(false);
+        zhihuHomeAdapter.setNewsItemClickListener(this);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -115,7 +115,6 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View {
         return false;
     }
 
-    Map<Integer, String> map = new HashMap<>();
     List<DateBean> integers = new ArrayList<>();
 
     @Override
@@ -124,9 +123,6 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View {
         if (isrefresh) {
             swipeRefresh.setRefreshing(false);
         }
-        map.clear();
-        map.put(0, getResources().getString(R.string.app_zhihu_home));
-        map.put(1, getResources().getString(R.string.app_zhihu_today));
         integers.clear();
         integers.add(new DateBean(0, getResources().getString(R.string.app_zhihu_home)));
         integers.add(new DateBean(1, getResources().getString(R.string.app_zhihu_today)));
@@ -134,9 +130,15 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View {
 
     @Override
     public void loadNext(ZhiHuListBean zhiHuListBean) {
-        map.put(zhihuHomeAdapter.getItemCount(), zhiHuListBean.getShowData());
         integers.add(new DateBean(zhihuHomeAdapter.getItemCount(), zhiHuListBean.getShowData()));
         zhihuHomeAdapter.addData(zhiHuListBean);
+    }
+
+    @Override
+    public void onNewsItemClick(String newsid) {
+        Intent intent = new Intent(getActivity(),NewsInfoActivity.class);
+        intent.putExtra("newsid",newsid);
+        startActivity(intent);
     }
 
     public class DateBean {
