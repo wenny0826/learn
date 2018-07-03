@@ -1,11 +1,19 @@
 package com.wenny.mvpdemo.data.entity;
 
+import com.wenny.mvpdemo.util.StringConverter;
+
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
+
 import java.util.List;
 
 /**
  * Created by Administrator on 2018/6/20.
  */
-
+@Entity(nameInDb = "news_info")
 public class NewsInfoBean {
 
     /**
@@ -94,73 +102,89 @@ public class NewsInfoBean {
     private String share_url;
     private String ga_prefix;
     private int type;
-    private int id;
+    @Id
+    private String id;
+    @Transient
     private List<?> js;
+    @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> images;
+    @Convert(columnType = String.class, converter = StringConverter.class)
     private List<String> css;
-
-    public String getBody() {
-        return body;
+    @Generated(hash = 1696708907)
+    public NewsInfoBean(String body, String image_source, String title, String image, String share_url, String ga_prefix, int type, String id, List<String> images, List<String> css) {
+        this.body = body;
+        this.image_source = image_source;
+        this.title = title;
+        this.image = image;
+        this.share_url = share_url;
+        this.ga_prefix = ga_prefix;
+        this.type = type;
+        this.id = id;
+        this.images = images;
+        this.css = css;
     }
-
+    @Generated(hash = 1718707371)
+    public NewsInfoBean() {
+    }
+    public String getBody() {
+        return this.body;
+    }
     public void setBody(String body) {
         this.body = body;
     }
-
     public String getImage_source() {
-        return image_source;
+        return this.image_source;
     }
-
     public void setImage_source(String image_source) {
         this.image_source = image_source;
     }
-
     public String getTitle() {
-        return title;
+        return this.title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public String getImage() {
-        return image;
+        return this.image;
     }
-
     public void setImage(String image) {
         this.image = image;
     }
-
     public String getShare_url() {
-        return share_url;
+        return this.share_url;
     }
-
     public void setShare_url(String share_url) {
         this.share_url = share_url;
     }
-
     public String getGa_prefix() {
-        return ga_prefix;
+        return this.ga_prefix;
     }
-
     public void setGa_prefix(String ga_prefix) {
         this.ga_prefix = ga_prefix;
     }
-
     public int getType() {
-        return type;
+        return this.type;
     }
-
     public void setType(int type) {
         this.type = type;
     }
-
-    public int getId() {
-        return id;
+    public String getId() {
+        return this.id;
     }
-
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
+    }
+    public List<String> getImages() {
+        return this.images;
+    }
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+    public List<String> getCss() {
+        return this.css;
+    }
+    public void setCss(List<String> css) {
+        this.css = css;
     }
 
     public List<?> getJs() {
@@ -169,21 +193,5 @@ public class NewsInfoBean {
 
     public void setJs(List<?> js) {
         this.js = js;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
-
-    public List<String> getCss() {
-        return css;
-    }
-
-    public void setCss(List<String> css) {
-        this.css = css;
     }
 }

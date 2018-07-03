@@ -3,6 +3,8 @@ package com.wenny.mvpdemo.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.wenny.mvpdemo.R;
+import com.wenny.mvpdemo.evenbus.NetWorkStateReceiver;
+import com.wenny.mvpdemo.util.NetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,15 +26,20 @@ import org.greenrobot.eventbus.Subscribe;
  * Created by ${wenny} on 2017/6/21.
  */
 
-public  abstract class BaseActivity extends AppCompatActivity implements BaseView{
-    // 管理运行的所有的activity
-//    public final static List<AppCompatActivity> mActivities = new LinkedList<AppCompatActivity>();
-//    public static BaseActivity activity;
+public  abstract class BaseActivity extends AppCompatActivity implements BaseView,NetWorkStateReceiver.NetEvevt {
+    public static NetWorkStateReceiver.NetEvevt evevt;
+    /**
+     * 网络类型
+     */
+    private int netMobile;
+
     private FragmentManager fragmentManager;
 
     //当前正在展示的Fragment
     private BaseFragment showFragment;
     private Toast toast;
+
+    NetWorkStateReceiver netWorkStateReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +47,16 @@ public  abstract class BaseActivity extends AppCompatActivity implements BaseVie
         //使输入框不被软键盘挡住
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(getContentViewId());
+
+        MyApplication.isNetWork = inspectNet();
+        evevt = this;
+        //注册网络监听的广播
+        if (netWorkStateReceiver == null) {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkStateReceiver, filter);
 
         //注册EventBus
         EventBus.getDefault().register(this);
@@ -180,11 +199,15 @@ public  abstract class BaseActivity extends AppCompatActivity implements BaseVie
         super.finish();
         overridePendingTransition(R.anim.alpha_enter, R.anim.alpha_exit);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //注销EventBus
         EventBus.getDefault().unregister(this);
+
+        unregisterReceiver(netWorkStateReceiver);
+
     }
 
     @Override
@@ -210,5 +233,36 @@ public  abstract class BaseActivity extends AppCompatActivity implements BaseVie
     @Override
     public Context getContext() {
         return BaseActivity.this;
+    }
+
+    public boolean inspectNet() {
+        this.netMobile = NetUtil.getNetWorkState(BaseActivity.this);
+        return isNetConnect();
+    }
+    /**
+     * 网络变化之后的类型
+     */
+    @Override
+    public void onNetChange(int netMobile) {
+        // TODO Auto-generated method stub
+        this.netMobile = netMobile;
+        MyApplication.isNetWork = isNetConnect();
+    }
+
+    /**
+     * 判断有无网络 。
+     *
+     * @return true 有网, false 没有网络.
+     */
+    public boolean isNetConnect() {
+        if (netMobile == 1) {
+            return true;
+        } else if (netMobile == 0) {
+            return true;
+        } else if (netMobile == -1) {
+            return false;
+
+        }
+        return false;
     }
 }

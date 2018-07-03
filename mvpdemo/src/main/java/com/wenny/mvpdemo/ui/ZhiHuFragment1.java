@@ -85,7 +85,7 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View, Z
     int nowPosition = -1;
 
     private void scrollUp() {
-        if (nowPosition > -1&&integers.size()>nowPosition) {
+        if (nowPosition > -1 && integers.size() > nowPosition) {
             if (firstVisibleItemPosition < integers.get(nowPosition).getPosition()) {
                 nowPosition--;
                 changeTitie(integers.get(nowPosition).getTitle());
@@ -94,8 +94,8 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View, Z
     }
 
     private void scrollDown() {
-        if (integers.size()>nowPosition+1) {
-            if (integers.get(nowPosition+1).getPosition() <= firstVisibleItemPosition) {
+        if (integers.size() > nowPosition + 1) {
+            if (integers.get(nowPosition + 1).getPosition() <= firstVisibleItemPosition) {
                 nowPosition++;
                 changeTitie(integers.get(nowPosition).getTitle());
             }
@@ -136,8 +136,8 @@ public class ZhiHuFragment1 extends BaseFragment implements ZhihuContact.View, Z
 
     @Override
     public void onNewsItemClick(String newsid) {
-        Intent intent = new Intent(getActivity(),NewsInfoActivity.class);
-        intent.putExtra("newsid",newsid);
+        Intent intent = new Intent(getActivity(), NewsInfoActivity.class);
+        intent.putExtra("newsid", newsid);
         startActivity(intent);
     }
 

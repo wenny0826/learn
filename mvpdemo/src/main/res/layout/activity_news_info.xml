@@ -68,16 +68,52 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/appColor">
-        <TextView
+        <ImageView
+            android:id="@+id/img_back"
+            android:padding="@dimen/dp_10"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_back"/>
+        <ImageView
+            android:padding="@dimen/dp_10"
+            app:layout_constraintRight_toLeftOf="@+id/img_collect"
+            android:id="@+id/img_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/share"/>
+        <ImageView
+            android:padding="@dimen/dp_10"
+            app:layout_constraintRight_toLeftOf="@+id/tv_comment"
+            android:id="@+id/img_collect"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/collect"/>
+        <TextView
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/textSize_14"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:id="@+id/tv_comment"
+            app:layout_constraintRight_toLeftOf="@+id/tv_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/comment"/>
+        <TextView
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/textSize_14"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/tv_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:drawableLeft="@drawable/praise"/>
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </FrameLayout>

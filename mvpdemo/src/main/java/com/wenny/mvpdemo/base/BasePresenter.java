@@ -22,6 +22,7 @@ public class BasePresenter<V extends BaseView> {
      * 绑定的view
      */
     private V mvpView;
+
     /**
      * 绑定view，一般在初始化中调用该方法
      */
@@ -47,5 +48,6 @@ public class BasePresenter<V extends BaseView> {
     public V getView(){
         return mvpView;
     }
+
 
 }

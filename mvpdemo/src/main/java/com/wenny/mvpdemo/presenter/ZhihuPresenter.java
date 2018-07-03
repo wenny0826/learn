@@ -3,6 +3,7 @@ package com.wenny.mvpdemo.presenter;
 import android.util.Log;
 
 import com.wenny.mvpdemo.base.BasePresenter;
+import com.wenny.mvpdemo.base.MyApplication;
 import com.wenny.mvpdemo.data.DataRepository;
 import com.wenny.mvpdemo.data.entity.ZhiHuHomeBean;
 import com.wenny.mvpdemo.data.entity.ZhiHuListBean;
@@ -19,6 +20,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ZhihuPresenter extends BasePresenter<ZhihuContact.View> implements ZhihuContact.Presenter {
 
     private String pageTime;
+
     DataRepository dataRepository;
 
     public ZhihuPresenter(DataRepository dataRepository) {
@@ -27,68 +29,87 @@ public class ZhihuPresenter extends BasePresenter<ZhihuContact.View> implements 
 
     @Override
     public void getData(boolean isRefresh) {
-        dataRepository.getZhihuHome()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ZhiHuHomeBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d("print", "onSubscribe: ");
+        if (!MyApplication.isNetWork){
+            ZhiHuHomeBean dbZhiHuHome = dataRepository.getDBZhiHuHome();
+            if (dbZhiHuHome != null){
+                getView().getData(dbZhiHuHome,isRefresh);
+                pageTime = dbZhiHuHome.getDate();
+            }
+        }else {
+            dataRepository.getZhihuHome()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ZhiHuHomeBean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            Log.d("print", "onSubscribe: ");
 
-                    }
-
-                    @Override
-                    public void onNext(ZhiHuHomeBean zhiHuHomeBean) {
-                        Log.d("print", "onNext: ");
-                        if (zhiHuHomeBean != null && isViewAttached()) {
-                            getView().getData(zhiHuHomeBean, isRefresh);
-                            pageTime = zhiHuHomeBean.getDate();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("print", "onError: " + e.getMessage());
-                        e.printStackTrace();
-                    }
+                        @Override
+                        public void onNext(ZhiHuHomeBean zhiHuHomeBean) {
+                            if (zhiHuHomeBean != null && isViewAttached()) {
+                                getView().getData(zhiHuHomeBean, isRefresh);
+                                dataRepository.updataNewsHome(zhiHuHomeBean);
+                                pageTime = zhiHuHomeBean.getDate();
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        Log.d("print", "onComplete: ");
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
     }
 
 
     @Override
     public void loadNext() {
-        dataRepository.loadNewNext(pageTime)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ZhiHuListBean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        Log.d("print", "loadNext: " +pageTime);
+        if (!MyApplication.isNetWork && pageTime != null){
+            ZhiHuListBean dbNewNext = dataRepository.getDBNewNext(pageTime);
+            if (dbNewNext != null){
+                Log.d("print", "loadNext: db ");
+                getView().loadNext(dbNewNext);
+                pageTime = dbNewNext.getDate();
+            }
+        }else if (pageTime != null){
+            dataRepository.loadNewNext(pageTime)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ZhiHuListBean>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ZhiHuListBean zhiHuListBean) {
-                        if (zhiHuListBean != null && isViewAttached()) {
-                            getView().loadNext(zhiHuListBean);
-                            pageTime = zhiHuListBean.getDate();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(ZhiHuListBean zhiHuListBean) {
+                            if (zhiHuListBean != null && isViewAttached()) {
+                                getView().loadNext(zhiHuListBean);
+                                dataRepository.updataNewsPage(zhiHuListBean,pageTime);
+                                pageTime = zhiHuListBean.getDate();
+                                Log.d("print", "onNext: net"+zhiHuListBean.getDate()+" "+pageTime);
 
-                    }
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
 
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
     }
 }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,7 +23,7 @@ import com.wenny.mvpdemo.presenter.NewsInfoPresenter;
  * Created by Administrator on 2018/6/19.
  */
 
-public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.View {
+public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.View, View.OnClickListener {
     private String TAG = "NewsInfoActivity";
     private Context context;
     private NewsInfoPresenter presenter;
@@ -33,11 +32,16 @@ public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.Vi
     private TextView tv_title, tv_watermark;
     private WebView webView;
     private ImageView image;
-    private LinearLayout toolbar;
+    private ConstraintLayout toolbar;
     private NestedScrollView nestedScrollview;
     private ConstraintLayout head;
     private int imageHeight,headY;
     private View top;
+    private ImageView img_back,img_share,img_collect;
+    private TextView tv_comment,tv_praise;
+    private String linkCss ="<style type=\"text/css\">"+"img {"+"width:100%;"+"height:auto;"+"}"+"body {"+"margin-right:15px;"
+            +"margin-left:15px;"+"margin-top:15px;"+"font-size:40px;"+"}"+"</style>";
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_news_info;
@@ -50,6 +54,7 @@ public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.Vi
         presenter = new NewsInfoPresenter(MyApplication.dataRepository);
         presenter.attachView(this);
         presenter.getData(newsId);
+        presenter.getExtra(newsId);
 
         tv_title = findViewById(R.id.tv_title);
         tv_watermark = findViewById(R.id.tv_watermark);
@@ -60,6 +65,17 @@ public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.Vi
         head = findViewById(R.id.head);
         top = findViewById(R.id.top);
 
+        img_back = findViewById(R.id.img_back);
+        img_share = findViewById(R.id.img_share);
+        img_collect = findViewById(R.id.img_collect);
+        tv_comment = findViewById(R.id.tv_comment);
+        tv_praise = findViewById(R.id.tv_praise);
+
+        img_back.setOnClickListener(this);
+        img_share.setOnClickListener(this);
+        img_collect.setOnClickListener(this);
+        tv_comment.setOnClickListener(this);
+        tv_praise.setOnClickListener(this);
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
         // 如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
@@ -91,7 +107,8 @@ public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.Vi
 
     @Override
     public void getData(NewsInfoBean newsInfoBean) {
-        webView.loadDataWithBaseURL(null, newsInfoBean.getBody(), "text/html", "utf-8", null);
+        String html = "<html><header>" + linkCss + "</header>" + newsInfoBean.getBody() + "</body></html>";
+        webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
         Glide.with(context).load(newsInfoBean.getImage()).into(image);
         tv_title.setText(newsInfoBean.getTitle());
         tv_watermark.setText(newsInfoBean.getImage_source());
@@ -99,6 +116,25 @@ public class NewsInfoActivity extends BaseActivity implements NewsInfoContact.Vi
 
     @Override
     public void getNewsExtra(NewInfoExtraBean newInfoExtraBean) {
-
+        tv_praise.setText(newInfoExtraBean.getPopularity()+"");
+        tv_comment.setText(newInfoExtraBean.getComments()+"");
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.img_back:
+                finish();
+                break;
+            case R.id.img_collect:
+                break;
+            case R.id.img_share:
+                break;
+            case R.id.tv_comment:
+                break;
+            case R.id.tv_praise:
+                break;
+        }
+    }
+
 }

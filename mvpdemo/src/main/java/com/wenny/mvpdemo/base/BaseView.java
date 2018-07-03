@@ -41,4 +41,5 @@ public interface BaseView {
      * @return 上下文
      */
     Context getContext();
+
 }
